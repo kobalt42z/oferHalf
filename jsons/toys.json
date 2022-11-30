@@ -19,5 +19,12 @@
         "category": "familiy",
         "imgUrl": "2wCEAAoGBxQUExYUFBQXFxYYGhkZGBkZGBoZIh4ZHSIcHB0XHR8cISsiGRwpHRghJTQjJy0uMTE1GSE2OzYwOioxMS4BCwsLDw4PHRERHTInIigwMzMyOjUzMDsyMTI6MjIwMzgwMDAwODAyMjgwMTAwMzAwMDAwMDAwMDAwMDAwMDAwMP",
         "price": 399
+    },
+    {
+        "name": "abalon",
+        "info": "abalon is a duel game",
+        "category": "duel",
+        "imgUrl": "2wCEAAoGBxQUExYUFBQXFxYYGhkZGBkZGBoZIh4ZHSIcHB0XHR8cISsiGRwpHRghJTQjJy0uMTE1GSE2OzYwOioxMS4BCwsLDw4PHRERHTInIigwMzMyOjUzMDsyMTI6MjIwMzgwMDAwODAyMjgwMTAwMzAwMDAwMDAwMDAwMDAwMDAwMP",
+        "price": 555
     }
 ]
