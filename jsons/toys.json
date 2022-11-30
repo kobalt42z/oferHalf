@@ -1,0 +1,23 @@
+[
+    {
+        "name": "playmobil",
+        "info": "playmobil is a funny kids game",
+        "category": "kids",
+        "imgUrl": "https://m.media-amazon.com/images/I/81o5COMBF-L._AC_SL1500_.jpg",
+        "price": 399
+    },
+    {
+        "name": "chase",
+        "info": "chase  is a strategy adult game",
+        "category": "adult",
+        "imgUrl": "https://play-lh.googleusercontent.com/_KdhauGbDE_Z6ukaIYx2ifp4PYcf_PY1fbikjQ5V1CfXaRNJMzWAUynbvGpBmc1C6yim=w526-h296-rw",
+        "price": 399
+    },
+    {
+        "name": "monopoly",
+        "info": "monopoly is a funny family game",
+        "category": "familiy",
+        "imgUrl": "2wCEAAoGBxQUExYUFBQXFxYYGhkZGBkZGBoZIh4ZHSIcHB0XHR8cISsiGRwpHRghJTQjJy0uMTE1GSE2OzYwOioxMS4BCwsLDw4PHRERHTInIigwMzMyOjUzMDsyMTI6MjIwMzgwMDAwODAyMjgwMTAwMzAwMDAwMDAwMDAwMDAwMDAwMP",
+        "price": 399
+    }
+]
