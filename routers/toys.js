@@ -3,7 +3,8 @@ const { json } = require('express');
 const express = require('express');
 const { ToysModel, toysValidation } = require('../models/toysModel');
 const router = express.Router();
-
+// !solved use this or create obj using new like mongoose site
+ToysModel().foo()
 
 router.get('/', async (req, res) => {
     try {
@@ -39,7 +40,7 @@ router.post('/', async (req, res) => {
                     return res.status(400).json(elementValidation.error.details);
                 }
                 
-
+                // ? solve : use Indexes at DB
                 // * check if exist in db if exist res =id if dont exist res = null 
                 // ! he suposed to wait until chek is end 
 
@@ -95,8 +96,9 @@ router.post('/', async (req, res) => {
             let dataRequset = ToysModel(req.body);
 
             // * finde the data over the db and stor in data check
-            let dataCheck = await ToysModel.find({ name: dataRequset.name, })
-
+            // let dataCheck = await ToysModel.find({ name: dataRequset.name, })
+           
+            
 
             // * if data is alredy existe in db return alredy exist 
             if (dataCheck[0] != null && dataCheck[0].name === dataRequset.name) {

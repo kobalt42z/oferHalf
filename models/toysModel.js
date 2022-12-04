@@ -19,6 +19,10 @@ const toysSchema = new mongoose.Schema({
         default: Date.now()
     }
 })
+toysSchema.method('foo', ()=> {
+    console.log('meeeeeoooooooooooow');
+  })
+
 // ? export toys model for router using
 // ? args: name of model , ref of model function , name of collection
 exports.ToysModel =  mongoose.model("toysModel",toysSchema,"toys");
@@ -39,3 +43,4 @@ exports.toysValidation = bodyRequest =>{
     })
     return joiSchema.validate(bodyRequest)
 }
+
