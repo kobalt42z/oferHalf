@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
-const { request } = require('express');
+
 
 // 
 /**
@@ -19,15 +19,14 @@ const toysSchema = new mongoose.Schema({
         default: Date.now()
     }
 })
-toysSchema.method('foo', ()=> {
-    console.log('meeeeeoooooooooooow');
-  })
+
+
 
 // ? export toys model for router using
 // ? args: name of model , ref of model function , name of collection
 exports.ToysModel =  mongoose.model("toysModel",toysSchema,"toys");
 
-exports.toysValidation = bodyRequest =>{
+exports.toysValidation = (bodyRequest) =>{
     /*
     * validate the data befor sendind to db 
     * dataUri check that is trhuly a uri/l 

@@ -9,38 +9,42 @@ const { date } = require('joi');
  * ? build by Schema constructor of mongoose 
  */
 const userSchema = new mongoose.Schema({
-    userName : String,
-    password : String,
-    emeil : String,
-    name : String,
-    age : Number,
-    profil_img_Url : String,
+    userName: String,
+    password: String,
+    email: String,
     date_created: {
         type: Date,
         default: Date.now()
     },
-    role:{
+    role: {
         type: String,
         default: 'user'
     }
-    
-    
+
+
 });
 
-exports.UserModel = mongoose.model("userModel",userSchema,"users");
+exports.UserModel = mongoose.model("userModel", userSchema, "users");
 
 // !continue the pattern 
-exports.userValidation = bodyRequest =>{
-    let joiSchema = {
-    userName : Joi.string().min(2).max(30).required(),
-    password : joi.string().alphanum().min(8).max(16).required(),
-    emeil : String,
-    name : String,
-    age : Number,
-    profil_img_Url : String,
-    }
+exports.userValidation = bodyRequest => {
+    let joiSchema = Joi.object({
+        userName: Joi.string().alphanum().min(2).max(30).required(),
+        password: Joi.string().alphanum().min(8).max(16).required(),
+        email: Joi.string().email().required(),
+    })
+    return joiSchema.validate(bodyRequest);
 }
-// ! need to ne nuilded 
+
+exports.loginValidation = bodyRequest => {
+    let joiSchema = Joi.object({
+        userName: Joi.string().alphanum().min(2).max(30).required(),
+        password: Joi.string().alphanum().min(8).max(16).required()
+    })
+};
+
+
+// ! need to ne nuilded
 /*
 * token sign in 
 * validtion of usser by joi 

@@ -1,19 +1,18 @@
 // ?respond with "hello world" when a GET request is made to the homepage
-const { json } = require('express');
+
 const express = require('express');
 const { ToysModel, toysValidation } = require('../models/toysModel');
 const router = express.Router();
-// !solved use this or create obj using new like mongoose site
-ToysModel().foo()
+
 
 router.get('/', async (req, res) => {
     try {
-        let data = await ToysModel
-            .find({})
+        let data = await ToysModel.find({})
         res.json(data)
 
     } catch (error) {
         console.log(error);
+        res.status(500).json({ error })
     }
 
 })
@@ -31,49 +30,46 @@ router.post('/', async (req, res) => {
         * and append it to db 
          */
         async function checkArry(array) {
-        //    ? init the arry to return at the end
-            let toInsert =[];
+            //    ? init the arry to return at the end
+            let toInsert = [];
             // ? for every element at array  make Joi check if its ok push to toInsert[]
-             await array.forEach(async (element) => {
+            await array.forEach(async (element) => {
                 elementValidation = toysValidation(element)
                 if (elementValidation.error) {
                     return res.status(400).json(elementValidation.error.details);
                 }
-                
+
                 // ? solve : use Indexes at DB
                 // * check if exist in db if exist res =id if dont exist res = null 
                 // ! he suposed to wait until chek is end 
+              
 
-               await ToysModel.exists({ name: element.name},(err,res)=>{
-                    if (err)console.log(err);
-                    if(res!==null){
-                        // !bug here 
-                        toInsert = {msg:"alredy exists",name:elementModeling.name}
-                    }
-                   
-                })
                 let elementModeling = ToysModel(element)
                 toInsert.push(elementModeling)
 
 
                 // * if data is alredy existe in db return alredy exist 
-              
-                
+
+
             })
             // ? return the checked and modeled array to call
             return toInsert;
-            
-            
-             
-            
+
+
+
+
         }
-         try {
+        try {
             // ? check aryy is called and wait to finish
-            let chekedArray = await checkArry(req.body)
+            let checkedArray = await checkArry(req.body)
+            console.log(checkedArray.length);
             // ? push all arry to db 
-            await ToysModel.insertMany(chekedArray)
-            // ? res to client with 200 and the data that he post 
-            return res.status(200).json({ msg: 'recived', data:chekedArray })
+            if (checkedArray.length != 0) {
+                await ToysModel.insertMany(checkedArray)
+                // ? res to client with 200 and the data that he post 
+                return res.status(200).json({ msg: 'recived', data: checkedArray })
+            }
+            return res.status(500).json({ msg: 'faild data is alredy exist !'})
 
         } catch (error) {
             console.log(error);
@@ -96,9 +92,9 @@ router.post('/', async (req, res) => {
             let dataRequset = ToysModel(req.body);
 
             // * finde the data over the db and stor in data check
-            // let dataCheck = await ToysModel.find({ name: dataRequset.name, })
-           
-            
+            let dataCheck = await ToysModel.find({ name: dataRequset.name, })
+
+
 
             // * if data is alredy existe in db return alredy exist 
             if (dataCheck[0] != null && dataCheck[0].name === dataRequset.name) {
@@ -117,6 +113,40 @@ router.post('/', async (req, res) => {
             console.log(error);
             res.status(500).json(error);
         }
+    }
+})
+
+router.delete('/delAll', async (req, res)=>{
+    try {
+        await ToysModel.deleteMany({})
+    res.status(200).json({msg:'ok'})
+    } catch (error) {
+        res.status(500).json({msg:error})
+    }
+});
+
+// ? with search query 
+router.get('/search', async (req, res) => {
+    try {
+        let searchQuery = req.query.s
+
+        //? make it a regular expression for match even part of word or if its case sensitive.
+        let regoulared = new RegExp(searchQuery, 'i')
+
+        let maxPerPage = 2;
+
+
+        //    * finde using regex in db 
+        let data = await ToysModel
+            .find({ name: searchQuery })
+            .limit(maxPerPage)
+            .skip(2)
+
+
+        res.status(200).json({ data: data })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error });
     }
 })
 
