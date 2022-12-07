@@ -1,13 +1,13 @@
 // ?respond with "hello world" when a GET request is made to the homepage
 
 const express = require('express');
-const { ToysModel, toysValidation } = require('../models/toysModel');
+const { VgModel, vgValidation } = require('../models/videoGameModel');
 const router = express.Router();
 
 
 router.get('/', async (req, res) => {
     try {
-        let data = await ToysModel.find({})
+        let data = await VgModel.find({})
         res.json(data)
 
     } catch (error) {
@@ -33,11 +33,11 @@ router.post('/', async (req, res) => {
             let toInsert = [];
             // ? for every element at array  make Joi check if its ok push to toInsert[]
             await array.forEach(async (element) => {
-                elementValidation = toysValidation(element)
+                elementValidation = vgValidation(element)
                 if (elementValidation.error) {
                     return res.status(400).json(elementValidation.error.details);
                 }
-                let elementModeling = ToysModel(element)
+                let elementModeling = VgModel(element)
                 toInsert.push(elementModeling)
             })
             // ? return the checked and modeled array to call
@@ -48,7 +48,7 @@ router.post('/', async (req, res) => {
             // ? check aryy is called and wait to finish
             let checkedArray = await checkArry(req.body)
             // ? push all arry to db 
-            await ToysModel.insertMany(checkedArray)
+            await VgModel.insertMany(checkedArray)
             // ? res to client with 200 and the data that he post 
                 return res.status(200).json({ msg: 'uploaded sucessfuly !', data: checkedArray })
             
@@ -64,7 +64,7 @@ router.post('/', async (req, res) => {
     // ? if its not an arry consider him as a singel object 
     else {
         // ? do joi check  to req.body if ok passs else return error to client
-        let validateRequest = toysValidation(req.body);
+        let validateRequest = vgValidation(req.body);
         if (validateRequest.error) {
             return res.status(400).json(validateRequest.error.details)
         }
@@ -72,7 +72,7 @@ router.post('/', async (req, res) => {
         // ? check if its alredy exist and try to post in db 
         try {
             // * model the data requestBody
-            let dataRequset = ToysModel(req.body);
+            let dataRequset = VgModel(req.body);
 
             // * else save the data in db and send confirmation to client
             await dataRequset.save();
@@ -89,7 +89,7 @@ router.post('/', async (req, res) => {
 
 router.delete('/delAll', async (req, res)=>{
     try {
-        await ToysModel.deleteMany({})
+        await VgModel.deleteMany({})
     res.status(200).json({msg:'ok'})
     } catch (error) {
         res.status(500).json({msg:error})
@@ -99,19 +99,23 @@ router.delete('/delAll', async (req, res)=>{
 // ? with search query 
 router.get('/search', async (req, res) => {
     try {
+        let maxPerPage = Number(req.query.perPage) || 4;
         let searchQuery = req.query.s
-
+        let page = req.query.page
+        let sort = req.query.sort || "_id";
+        let reverse = req.query.reverse == "yes" ? 1 : -1;
         //? make it a regular expression for match even part of word or if its case sensitive.
         let regoulared = new RegExp(searchQuery, 'i')
 
-        let maxPerPage = 2;
+       
 
 
         //    * finde using regex in db 
-        let data = await ToysModel
-            .find({ name: searchQuery })
+        let data = await VgModel
+            .find({ Game: regoulared })
             .limit(maxPerPage)
-            .skip(2)
+            .skip((page-1) * maxPerPage )
+            .sort({[sort]:reverse})
 
 
         res.status(200).json({ data: data })

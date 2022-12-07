@@ -1,0 +1,1 @@
+11000 : duplicate index key !

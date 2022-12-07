@@ -9,11 +9,13 @@ const express = require('express')
 const app = express()
 const root = require('./root');
 const toys = require('./toys');
+const videoGame = require('./videoGame');
+
 
 
 //? function taht init all the raoutes
 exports.routesInit = app =>{
     app.use('/',root)
     app.use('/toys',toys)
-    
+    app.use('/videoGame',videoGame)
 }
