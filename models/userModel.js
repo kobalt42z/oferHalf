@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
 const { date } = require('joi');
+const jwt = require('jsonwebtoken');
+const { config } = require('../config/secret')
 
 
 // 
@@ -44,9 +46,7 @@ exports.loginValidation = bodyRequest => {
 };
 
 
-// ! need to ne nuilded
-/*
-* token sign in 
-* validtion of usser by joi 
-*validation to login by joi username && pasword
- */
+exports.creatToken = userId => {
+    jwt.sign({ _id: userId },config.tokenSecret,{expiresIn:"60mins"})
+}
+
