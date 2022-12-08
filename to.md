@@ -1,4 +1,3 @@
-fix .env and config
 apply jwt auth 
 apply login system 
 write docs 
