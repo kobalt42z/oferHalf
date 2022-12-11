@@ -1,22 +1,10 @@
 {
   "name": "oferHalf",
   "version": "1.0.0",
-  "description": "half mission of ofer",
+  "description": "game docs api",
   "main": "app.js",
   "repository": "https://github.com/kobalt42z/oferHalf.git",
   "author": "Shmouel kessous <chmouel2690@gmail.com>",
   "license": "MIT",
-  "dependencies": {
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "generate-template-files": "^3.2.1",
-    "joi": "^17.7.0",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.7.4",
-    "nodemon": "^2.0.20"
-  },
-  "scripts": {
-    "start": "node start app.js",
-    "dev": "nodemon start app.js"
- }
+  "private": false
 }
