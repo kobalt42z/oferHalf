@@ -9,15 +9,7 @@ router.get('/', (req, res) => {
 
 })
 
-// *** test!!!! ****
-router.post('/',auth,isAdmin, (req, res) => {
-  let data = req
- console.log(req.header("x-api-key"));
- res.json({msg: 'hello world fromroot'})
-  
 
-
-})
 
 
 module.exports = router;

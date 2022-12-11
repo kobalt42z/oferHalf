@@ -19,6 +19,10 @@ const vgSchema = new mongoose.Schema({
     PublisherLink: String,
     Platform: String,
     PlatformLink: String,
+    AdedBy: {
+        type: String,
+        default: "system"
+    },
     date_created: {
         type: Date,
         default: Date.now()
@@ -48,7 +52,14 @@ exports.vgValidation = (bodyRequest) => {
         PublisherLink: Joi.string().required().allow("",null),
         Platform:  Joi.string().min(2).max(30).required().allow("",null),
         PlatformLink: Joi.string().required().allow("",null),
+        
     })
     return joiSchema.validate(bodyRequest)
 }
 
+exports.delGameValidation = bodyRequest => {
+    let joiSchema = Joi.object({
+        _id: Joi.string().alphanum().required()
+    })
+    return joiSchema.validate(bodyRequest)
+}

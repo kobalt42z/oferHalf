@@ -25,10 +25,12 @@ const userSchema = new mongoose.Schema({
 
 
 });
-
+/*
+* export a model that herit from schema 
+*/
 exports.UserModel = mongoose.model("userModel", userSchema, "users");
 
- 
+// * validation for user creation 
 exports.userValidation = bodyRequest => {
     let joiSchema = Joi.object({
         userName: Joi.string().alphanum().min(2).max(30).required(),
@@ -38,6 +40,8 @@ exports.userValidation = bodyRequest => {
     return joiSchema.validate(bodyRequest);
 }
 
+
+// *validation for login.  account can be username and mail 
 exports.loginValidation = bodyRequest => {
     let joiSchema = Joi.object({
         account: Joi.string().min(2).max(30).required(),
@@ -46,12 +50,15 @@ exports.loginValidation = bodyRequest => {
     return joiSchema.validate(bodyRequest);
 };
 
+// * validation for deletion check id
 exports.delUserValidation = bodyRequest => {
     let joiSchema = Joi.object({
         _id: Joi.string().alphanum().required()
     })
     return joiSchema.validate(bodyRequest)
 }
+
+// * validation for update here all schema is optional you wiil notified in th route if nothing changed 
 exports.userUpdateValidation = bodyRequest => {
     let joiSchema = Joi.object({
         userName: Joi.string().alphanum().min(2).max(30),
@@ -62,6 +69,9 @@ exports.userUpdateValidation = bodyRequest => {
     })
     return joiSchema.validate(bodyRequest);
 }
+
+// * creat token when user login .time befor expired : 60mins
+// ? payload containig in of user and role for middleware checks  
 exports.creatToken = (_id, _role) => {
     let token = jwt.sign({ id: _id, role: _role }, config.tokenSecret, { expiresIn: "60mins" })
     return token;

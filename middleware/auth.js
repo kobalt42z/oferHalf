@@ -11,7 +11,7 @@ const { config } = require("../config/secret");
 exports.auth = (req, res, next) => {
     let token = req.header('x-api-key');
     if (!token) {
-        res.status(401).json({ msg: "is not a valid token !" })
+        res.status(401).json({ msg: "please provide a valid token!" })
     }
     try {
         let decodedToken = jwt.verify(token, config.tokenSecret);
