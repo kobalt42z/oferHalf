@@ -3,7 +3,7 @@ const path = require('path');
 require("./database/connect")
 const { routesInit } = require('./routers/routeInit.js');
 
-
+const {checkToken} = require('./middleware/auth');
 // * creat a server called app 
 const app = express()
 
@@ -24,3 +24,4 @@ app.listen(port, () => {
 
 // * make public folder acsessible for client
 app.use(express.static(path.join(__dirname, 'public',)));
+

@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
 
 exports.UserModel = mongoose.model("userModel", userSchema, "users");
 
-// !continue the pattern 
+ 
 exports.userValidation = bodyRequest => {
     let joiSchema = Joi.object({
         userName: Joi.string().alphanum().min(2).max(30).required(),
@@ -40,13 +40,29 @@ exports.userValidation = bodyRequest => {
 
 exports.loginValidation = bodyRequest => {
     let joiSchema = Joi.object({
-        userName: Joi.string().alphanum().min(2).max(30).required(),
+        account: Joi.string().min(2).max(30).required(),
         password: Joi.string().alphanum().min(8).max(16).required()
     })
+    return joiSchema.validate(bodyRequest);
 };
 
-
-exports.creatToken = userId => {
-    jwt.sign({ _id: userId },config.tokenSecret,{expiresIn:"60mins"})
+exports.delUserValidation = bodyRequest => {
+    let joiSchema = Joi.object({
+        _id: Joi.string().alphanum().required()
+    })
+    return joiSchema.validate(bodyRequest)
 }
-
+exports.userUpdateValidation = bodyRequest => {
+    let joiSchema = Joi.object({
+        userName: Joi.string().alphanum().min(2).max(30),
+        password: Joi.string().alphanum().min(8).max(16),
+        email: Joi.string().email(),
+        role: Joi.string().allow("admin","user"),
+        
+    })
+    return joiSchema.validate(bodyRequest);
+}
+exports.creatToken = (_id, _role) => {
+    let token = jwt.sign({ id: _id, role: _role }, config.tokenSecret, { expiresIn: "60mins" })
+    return token;
+}
