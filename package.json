@@ -16,6 +16,7 @@
     "nodemon": "^2.0.20"
   },
   "scripts": {
-    "start": "nodemon start app.js"
-  }
+    "start": "node start app.js",
+    "dev": "nodemon start app.js"
+ }
 }
