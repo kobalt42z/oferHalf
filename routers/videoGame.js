@@ -2,14 +2,14 @@
 
 const express = require('express');
 const { auth, isAdmin } = require('../middleware/auth');
-const { VgModel, vgValidation ,delGameValidation } = require('../models/videoGameModel');
+const { VgModel, vgValidation, delGameValidation,vgUpdateValidation} = require('../models/videoGameModel');
 const router = express.Router();
 
 
 
 router.get('/', auth, async (req, res) => {
     try {
-        let maxPerPage = Number(req.query.perPage) || 4;
+        let maxPerPage = Number(req.query.perPage) || 10;
         let page = req.query.page
         let sort = req.query.sort || "_id";
         let reverse = req.query.reverse == "yes" ? 1 : -1;
@@ -19,7 +19,7 @@ router.get('/', auth, async (req, res) => {
             .skip((page - 1) * maxPerPage)
             .sort({ [sort]: reverse })
 
-        res.json(data)
+        res.json({ resultCount: data.length, data })
 
     } catch (error) {
         console.log(error);
@@ -31,7 +31,7 @@ router.get('/', auth, async (req, res) => {
 
 
 // ? allow you to add a new game or an array of games to the collection 
-router.post('/', auth, async (req, res) => {
+router.post('/addGame', auth, async (req, res) => {
 
     // ? if its not an arry consider him as a singel object 
 
@@ -64,15 +64,18 @@ router.post('/', auth, async (req, res) => {
 // ! need check
 // ?allow you to del games by id passsed into "target" query
 router.delete('/delVg', auth, isAdmin, async (req, res) => {
-    // *joi validation 
-    let validDel = delGameValidation(req.query.target.value)
-    if (validDel.error) {
-        return res.status(401).json(validDel.error.details)
-    }
+
+
     try {
 
         let gameToDel = req.query.target
-        //  await VgModel.findOne({ _id: gameToDel }) 
+
+        if (!gameToDel) {
+            return res.status(400).json({
+                msg: 'query "target" is empty or invalid please provide target for deletion'
+            })
+        }
+
         let data = await VgModel.deleteOne({ _id: gameToDel })
         // ? if deleted count is returned 0 than throw back an error 
         if (data.deletedCount == 0) {
@@ -91,7 +94,7 @@ router.delete('/delVg', auth, isAdmin, async (req, res) => {
 // ? with search query 
 router.get('/search', auth, async (req, res) => {
     try {
-        let maxPerPage = Number(req.query.perPage) || 4;
+        let maxPerPage = Number(req.query.perPage) || 10;
         let searchQuery = req.query.s
         let page = req.query.page
         let sort = req.query.sort || "_id";
@@ -109,12 +112,55 @@ router.get('/search', auth, async (req, res) => {
             .skip((page - 1) * maxPerPage)
             .sort({ [sort]: reverse })
 
-
-        res.status(200).json({ data: data })
+        if (data.length == 0) {
+            return res.status(404).json({ msg: `${searchQuery} is not existing at db ` })
+        }
+        res.status(200).json({ resultCount: data.length, data })
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: error });
     }
 })
+
+router.patch('/updateGame', auth, isAdmin, async (req, res) => {
+    // * joi validation :
+    let validUpdate = vgUpdateValidation(req.body)
+    if (validUpdate.error) {
+      return res.status(401).json(validUpdate.error.details)
+    }
+    try {
+      let target = req.query.target
+      let toUpdate = req.body
+  
+      if (!target) {
+        return res.status(401).json({
+          msg: 'query "target" is empty or invalid please provide target for update'
+        })
+      }
+      if (Object.keys(toUpdate).length === 0) {
+        return res.status(401).json({
+          msg: 'request invalid body is empty provide change to perform on target'
+        })
+      }
+  
+      let data = await VgModel.updateOne({ _id: target }, { $set: toUpdate })
+  
+      // ? in case no matched document 
+      if (!data.matchedCount) {
+        return res.status(401).json({ msg: `${target} not existing in DB ` })
+      }
+      // ? in case no change beenn made 
+      if (!data.modifiedCount) {
+        return res.status(401).json({ msg: `${target} existing in DB , but no change have been made ! ` })
+      }
+      res.status(200).json({ msg: `${target} -> updated successfully!`, data })
+  
+  
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({ error: error });
+    }
+  })
+  
 
 module.exports = router;

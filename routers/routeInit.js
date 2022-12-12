@@ -17,6 +17,6 @@ const users = require('./users');
 exports.routesInit = app =>{
     app.use('/',root)
     app.use('/toys',toys)
-    app.use('/videoGame',videoGame)
+    app.use('/videoGames',videoGame)
     app.use('/users',users)
 }

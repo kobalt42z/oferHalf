@@ -42,16 +42,16 @@ exports.vgValidation = (bodyRequest) => {
     * as it mentioned in the Joi API DOCS
     */
     let joiSchema = Joi.object({
-        Game: Joi.string().min(2).max(30).required().allow("",null),
-        Genre: Joi.string().min(2).max(30).required().allow("",null),
-        GameLink: Joi.string().required().allow("",null),
+        Game: Joi.string().min(2).max(30).required(),
+        Genre: Joi.string().min(2).max(30).required(),
+        GameLink: Joi.string().required(),
         Year: Joi.number().min(1900).max(2100).required(),
-        Dev: Joi.string().min(2).max(30).required().allow("",null),
-        DevLink: Joi.string().required().allow("",null),
-        Publisher: Joi.string().min(2).max(30).required().allow("",null),
-        PublisherLink: Joi.string().required().allow("",null),
-        Platform:  Joi.string().min(2).max(30).required().allow("",null),
-        PlatformLink: Joi.string().required().allow("",null),
+        Dev: Joi.string().min(2).max(30).required(),
+        DevLink: Joi.string().required(),
+        Publisher: Joi.string().min(2).max(30).required(),
+        PublisherLink: Joi.string().required(),
+        Platform:  Joi.string().min(2).max(30).required(),
+        PlatformLink: Joi.string().required(),
         
     })
     return joiSchema.validate(bodyRequest)
@@ -60,6 +60,27 @@ exports.vgValidation = (bodyRequest) => {
 exports.delGameValidation = bodyRequest => {
     let joiSchema = Joi.object({
         _id: Joi.string().alphanum().required()
+    })
+    return joiSchema.validate(bodyRequest)
+}
+exports.vgUpdateValidation = (bodyRequest) => {
+    /*
+    * validate the data befor sendind to db 
+    * dataUri check that is trhuly a uri/l 
+    * as it mentioned in the Joi API DOCS
+    */
+    let joiSchema = Joi.object({
+        Game: Joi.string().min(2).max(30),
+        Genre: Joi.string().min(2).max(30),
+        GameLink: Joi.string(),
+        Year: Joi.number().min(1900).max(2100),
+        Dev: Joi.string().min(2).max(30),
+        DevLink: Joi.string(),
+        Publisher: Joi.string().min(2).max(30),
+        PublisherLink: Joi.string(),
+        Platform:  Joi.string().min(2).max(30),
+        PlatformLink: Joi.string()
+        
     })
     return joiSchema.validate(bodyRequest)
 }

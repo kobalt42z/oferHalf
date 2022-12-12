@@ -30,7 +30,7 @@ exports.auth = (req, res, next) => {
 exports.isAdmin = (req, res, next) => {
 
     if (req.tokenData.role !== 'admin') {
-        res.status(401).json({ msg: " user must be an admin ! " });
+        res.status(401).json({ msg: " the action you trying to perform is allowed only for admins  " });
         next('route')
     }
     else next();

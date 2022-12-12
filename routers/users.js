@@ -17,17 +17,17 @@ router.post('/signIn', async (req, res) => {
   // * joi validation 
   let validateRequest = userValidation(req.body)
   if (validateRequest.error) {
-    return res.status(403).json(validateRequest.error.details)
+    return res.status(400).json(validateRequest.error.details)
   }
 
   try {
     let data = UserModel(req.body);
     await data.save(); // saving at db
-    res.status(200).json({ msg: `${data.userName} are added successfully!` })
+    res.status(201).json({ msg: `${data.userName} are added successfully!` })
   } catch (error) {
 
-  // * if the erro is alredy in db (INDEX UNIQU) then notif the user !
-    if (error.code === 11000) res.status(400).json({ problem: error.keyValue, msg: ` alredy exist!`, error: error });
+    // * if the erro is alredy in db (INDEX UNIQU) then notif the user !
+    if (error.code === 11000) res.status(409).json({ problem: error.keyValue, msg: ` alredy exist!`, error: error });
     else res.status(500).json({ msg: error });
     console.log(error);
 
@@ -67,7 +67,7 @@ router.post('/login', async (req, res) => {
 router.get('/myInfo', auth, async (req, res) => {
   // res.json(req.tokenData.id);
   let data = await UserModel.findOne({ _id: req.tokenData.id })
-  // console.log(data);
+
   res.status(200).json({ msg: `sucessfuly logged in as ${data.userName}`, data: data });
 
 })
@@ -78,15 +78,16 @@ router.get('/myInfo', auth, async (req, res) => {
 
 // ?allow you to del users by id passsed into "target" query
 router.delete('/delUser', auth, isAdmin, async (req, res) => {
-  // *joi validation 
-  let validDel = delUserValidation(req.query.target.value)
-  if (validDel.error) {
-    return res.status(401).json(validDel.error.details)
-  }
+
   try {
-    
+
     let userToDel = req.query.target
-    //  await UserModel.findOne({ _id: userToDel }) 
+
+    if (!userToDel) {
+      return res.status(400).json({
+        msg: 'query "target" is empty or invalid please provide target for deletion'
+      })
+    }
     let data = await UserModel.deleteOne({ _id: userToDel })
     // ? if deleted count is returned 0 than throw back an error 
     if (data.deletedCount == 0) {
@@ -105,13 +106,24 @@ router.delete('/delUser', auth, isAdmin, async (req, res) => {
 // !check is needed 
 router.patch('/updateUser', auth, isAdmin, async (req, res) => {
   // * joi validation :
-  let validUpdate =userUpdateValidation(req.body)
+  let validUpdate = userUpdateValidation(req.body)
   if (validUpdate.error) {
     return res.status(401).json(validUpdate.error.details)
   }
   try {
     let target = req.query.target
     let toUpdate = req.body
+
+    if (!target) {
+      return res.status(401).json({
+        msg: 'query "target" is empty or invalid please provide target for update'
+      })
+    }
+    if (Object.keys(toUpdate).length === 0) {
+      return res.status(401).json({
+        msg: 'request invalid body is empty provide change to perform on target'
+      })
+    }
 
     let data = await UserModel.updateOne({ _id: target }, { $set: toUpdate })
 
@@ -156,6 +168,9 @@ router.get('/browse', auth, isAdmin, async (req, res) => {
       .sort({ [sort]: reverse })
 
 
+    if (data.length == 0) {
+     return res.status(404).json({ msg: `${searchQuery} is not existing at db ` })
+    }
     res.status(200).json({ data: data })
   } catch (error) {
     console.log(error);
