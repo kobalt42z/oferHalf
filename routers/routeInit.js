@@ -8,7 +8,7 @@
 const express = require('express')
 const app = express()
 const root = require('./root');
-const toys = require('./toys');
+
 const videoGame = require('./videoGame');
 const users = require('./users');
 
@@ -16,7 +16,6 @@ const users = require('./users');
 //? function taht init all the raoutes
 exports.routesInit = app =>{
     app.use('/',root)
-    app.use('/toys',toys)
     app.use('/videoGames',videoGame)
     app.use('/users',users)
 }

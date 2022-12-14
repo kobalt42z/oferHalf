@@ -44,25 +44,20 @@ exports.vgValidation = (bodyRequest) => {
     let joiSchema = Joi.object({
         Game: Joi.string().min(2).max(30).required(),
         Genre: Joi.string().min(2).max(30).required(),
-        GameLink: Joi.string().required(),
+        GameLink: Joi.string().max(999).required(),
         Year: Joi.number().min(1900).max(2100).required(),
         Dev: Joi.string().min(2).max(30).required(),
-        DevLink: Joi.string().required(),
+        DevLink: Joi.string().max(999).required(),
         Publisher: Joi.string().min(2).max(30).required(),
-        PublisherLink: Joi.string().required(),
+        PublisherLink: Joi.string().max(999).required(),
         Platform:  Joi.string().min(2).max(30).required(),
-        PlatformLink: Joi.string().required(),
+        PlatformLink: Joi.string().max(999).required(),
         
     })
     return joiSchema.validate(bodyRequest)
 }
 
-exports.delGameValidation = bodyRequest => {
-    let joiSchema = Joi.object({
-        _id: Joi.string().alphanum().required()
-    })
-    return joiSchema.validate(bodyRequest)
-}
+
 exports.vgUpdateValidation = (bodyRequest) => {
     /*
     * validate the data befor sendind to db 
@@ -72,14 +67,14 @@ exports.vgUpdateValidation = (bodyRequest) => {
     let joiSchema = Joi.object({
         Game: Joi.string().min(2).max(30),
         Genre: Joi.string().min(2).max(30),
-        GameLink: Joi.string(),
+        GameLink: Joi.string().max(999),
         Year: Joi.number().min(1900).max(2100),
         Dev: Joi.string().min(2).max(30),
-        DevLink: Joi.string(),
+        DevLink: Joi.string().max(999),
         Publisher: Joi.string().min(2).max(30),
-        PublisherLink: Joi.string(),
+        PublisherLink: Joi.string().max(999),
         Platform:  Joi.string().min(2).max(30),
-        PlatformLink: Joi.string()
+        PlatformLink: Joi.string().max(999)
         
     })
     return joiSchema.validate(bodyRequest)

@@ -37,6 +37,7 @@ exports.userValidation = bodyRequest => {
         userName: Joi.string().alphanum().min(2).max(30).required(),
         password: Joi.string().alphanum().min(8).max(16).required(),
         email: Joi.string().email().required(),
+        // ! emali tag is limited and check regex of vald email
     })
     return joiSchema.validate(bodyRequest);
 }
@@ -54,7 +55,7 @@ exports.loginValidation = bodyRequest => {
 // * validation for deletion check id
 exports.delUserValidation = bodyRequest => {
     let joiSchema = Joi.object({
-        _id: Joi.string().alphanum().required()
+        _id: Joi.string().alphanum().max(999).required()
     })
     return joiSchema.validate(bodyRequest)
 }
@@ -64,8 +65,8 @@ exports.userUpdateValidation = bodyRequest => {
     let joiSchema = Joi.object({
         userName: Joi.string().alphanum().min(2).max(30),
         password: Joi.string().alphanum().min(8).max(16),
-        email: Joi.string().email(),
-        role: Joi.string().allow("admin","user"),
+        email: Joi.string().email().max(999),
+        role: Joi.string().max(999).allow("admin","user"),
         
     })
     return joiSchema.validate(bodyRequest);
