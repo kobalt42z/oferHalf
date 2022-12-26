@@ -13,7 +13,7 @@ router.get('/login', (req, res) => {
 })
 
 // ? signin(register) new default user using POST 
-router.post('/signIn', async (req, res) => {
+router.post('/signUp', async (req, res) => {
   // * joi validation 
   let validateRequest = userValidation(req.body)
   if (validateRequest.error) {

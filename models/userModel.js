@@ -12,6 +12,8 @@ const { config } = require('../config/secret')
  * ? build by Schema constructor of mongoose 
  */
 const userSchema = new mongoose.Schema({
+    firstName: String,
+    lasName: String,
     userName: String,
     password: String,
     email: String,
@@ -34,9 +36,12 @@ exports.UserModel = mongoose.model("userModel", userSchema, "users");
 // * validation for user creation 
 exports.userValidation = bodyRequest => {
     let joiSchema = Joi.object({
-        userName: Joi.string().alphanum().min(2).max(30).required(),
+
+        lastName: Joi.string().alphanum().min(2).max(30).required(),
+        firstName: Joi.string().alphanum().min(2).max(30).required(),
+        userName: Joi.string().alphanum().min(2).max(30),
         password: Joi.string().alphanum().min(8).max(16).required(),
-        email: Joi.string().email().required(),
+        email: Joi.string().email().max(100).required(),
         // ! emali tag is limited and check regex of vald email
     })
     return joiSchema.validate(bodyRequest);
