@@ -39,7 +39,7 @@ exports.userValidation = bodyRequest => {
 
         lastName: Joi.string().alphanum().min(2).max(30).required(),
         firstName: Joi.string().alphanum().min(2).max(30).required(),
-        userName: Joi.string().alphanum().min(2).max(30),
+        userName: Joi.string().alphanum().min(2).max(30).required(),
         password: Joi.string().alphanum().min(8).max(16).required(),
         email: Joi.string().email().max(100).required(),
         // ! emali tag is limited and check regex of vald email

@@ -7,6 +7,7 @@
   "author": "Shmouel kessous <chmouel2690@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "generate-template-files": "^3.2.1",
@@ -18,5 +19,5 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon start app.js"
- }
+  }
 }

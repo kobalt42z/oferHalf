@@ -1,7 +1,7 @@
 // ?respond with "hello world" when a GET request is made to the homepage
 const express = require('express');
 
-const { auth, isAdmin } = require('../middleware/auth');
+const { auth, isAdmin, Aorigins } = require('../middleware/auth');
 const { UserModel, userValidation, creatToken, loginValidation, delUserValidation, userUpdateValidation } = require('../models/userModel');
 const router = express.Router();
 
