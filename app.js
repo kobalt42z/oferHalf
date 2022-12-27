@@ -26,9 +26,3 @@ app.listen(port, () => {
 // * make public folder acsessible for client
 app.use(express.static(path.join(__dirname, 'public',)));
 
-
-const corsOptions ={
-    origin:"http://localhost:4000", 
-    // credentials:true,            access-control-allow-credentials:true
-    optionSuccessStatus:200
-}

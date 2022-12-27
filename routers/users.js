@@ -12,7 +12,7 @@ router.get('/login', (req, res) => {
 
 })
 
-// ? signin(register) new default user using POST 
+// ? signup(register) new default user using POST 
 router.post('/signUp', async (req, res) => {
   // * joi validation 
   let validateRequest = userValidation(req.body)
