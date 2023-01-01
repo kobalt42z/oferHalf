@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
     userName: String,
     password: String,
     email: String,
+    profilePicture:{
+        type:String,
+        default:'https://freesvg.org/img/abstract-user-flat-4.png'
+    },
     date_created: {
         type: Date,
         default: Date.now()
@@ -36,12 +40,13 @@ exports.UserModel = mongoose.model("userModel", userSchema, "users");
 // * validation for user creation 
 exports.userValidation = bodyRequest => {
     let joiSchema = Joi.object({
-
+        
         lastName: Joi.string().alphanum().min(2).max(30).required(),
         firstName: Joi.string().alphanum().min(2).max(30).required(),
         userName: Joi.string().alphanum().min(2).max(30).required(),
         password: Joi.string().alphanum().min(8).max(16).required(),
         email: Joi.string().email().max(100).required(),
+        profilePicture: Joi.string().min(10).max(100)
         // ! emali tag is limited and check regex of vald email
     })
     return joiSchema.validate(bodyRequest);

@@ -9,6 +9,10 @@ router.get('/', (req, res) => {
 
 })
 
+router.get('/verifyToken', auth ,(req,res)=>{
+    const decodedToken = req.tokenData
+    res.status(200).json({decodedToken}) 
+})
 
 
 

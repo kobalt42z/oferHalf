@@ -11,7 +11,7 @@ const { config } = require("../config/secret");
 exports.auth = (req, res, next) => {
     let token = req.header('x-api-key');
     if (!token) {
-        res.status(401).json({ msg: "please provide a valid token!" })
+       return res.status(401).json({ msg: "please provide a valid token!" })
     }
     try {
         let decodedToken = jwt.verify(token, config.tokenSecret);
@@ -20,7 +20,7 @@ exports.auth = (req, res, next) => {
         next();
     } catch (error) {
         console.log(error);
-        res.status(500).json({ msg: "token is invalid or expired!" })
+        return res.status(500).json({ msg: "token is invalid or expired!" })
     }
 }
 

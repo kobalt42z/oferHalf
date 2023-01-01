@@ -45,16 +45,21 @@ router.post('/login', async (req, res) => {
     let data = req.body;
 
     // * check that : (userName OR email) AND (password) are existing in db 
-    let search = await UserModel.findOne({ $and: [{ $or: [{ userName: data.account }, { email: data.account }] }, { password: data.password }] })
+    let searchResult = await UserModel.findOne({ $and: [{ $or: [{ userName: data.account }, { email: data.account }] }, { password: data.password }] })
 
     // ? if not existing in db then throw back error
-    if (!search) {
+    if (!searchResult) {
       return res.status(401).json({ msg: 'invalid credentials ' })
     }
     //  ? on valid creat new token for user allow him to navigate trogh the different section withou login in 
-    let token = creatToken(search._id, search.role)
+    let token = creatToken(searchResult._id, searchResult.role)
+
+    // ?mask password in obj 
+    searchResult.password ='**********'
+    
+    
     //* throw back token to user
-    res.status(200).json({ token: token })
+    res.status(200).json({ token: token , user :searchResult})
 
   } catch (err) {
     console.log(err);
@@ -144,17 +149,17 @@ router.patch('/updateUser', auth, isAdmin, async (req, res) => {
   }
 })
 
-// ? allow you to browse all user and search them by their email or username 
+// ? allow you to browse all user and searchResult them by their email or username 
 // ? even a partial match is allowed do to the regex method used (I flag) 
 router.get('/browse', auth, isAdmin, async (req, res) => {
   try {
     let maxPerPage = Number(req.query.perPage) || 4;
-    let searchQuery = req.query.s
+    let searchResultQuery = req.query.s
     let page = req.query.page
     let sort = req.query.sort || "_id";
     let reverse = req.query.reverse == "yes" ? 1 : -1;
     //? make it a regular expression for match even part of word or if its case sensitive.
-    let regoulared = new RegExp(searchQuery, 'i')
+    let regoulared = new RegExp(searchResultQuery, 'i')
 
 
 
@@ -169,7 +174,7 @@ router.get('/browse', auth, isAdmin, async (req, res) => {
 
 
     if (data.length == 0) {
-     return res.status(404).json({ msg: `${searchQuery} is not existing at db ` })
+     return res.status(404).json({ msg: `${searchResultQuery} is not existing at db ` })
     }
     res.status(200).json({ data: data })
   } catch (error) {
