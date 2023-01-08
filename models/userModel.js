@@ -13,7 +13,7 @@ const { config } = require('../config/secret')
  */
 const userSchema = new mongoose.Schema({
     firstName: String,
-    lasName: String,
+    lastName: String,
     userName: String,
     password: String,
     email: String,
